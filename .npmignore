@@ -1,0 +1,5 @@
+node_modules
+src
+sdk-test
+test
+.env
