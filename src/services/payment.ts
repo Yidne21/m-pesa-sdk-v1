@@ -8,6 +8,7 @@ export interface Data {
 export interface PaymentRequest {
   PhoneNumber: number;
   AccountReference: string;
+  // transactionDesc: string;
   MerchantRequestID: string;
   BusinessShortCode: string;
   TransactionType: string;
@@ -49,6 +50,7 @@ export class Payment {
   async stkPush(data: PaymentRequest): Promise<any> {
     console.log("+++++++++Data++++++++++:", data);
     const response = await this.client.post("stkpush/v3/processrequest", data);
+    console.log("+++++++++Response++++++++++:", response.data);
     console.log("+++++++++Response++++++++++:", response.data);
     return response.data;
   }
