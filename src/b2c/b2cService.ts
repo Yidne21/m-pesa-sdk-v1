@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { B2CRequest, PaymentRequest } from "./b2cTypes";
 
-export class B2cService {
+export class B2c {
   private client: AxiosInstance;
 
   constructor(token: string) {

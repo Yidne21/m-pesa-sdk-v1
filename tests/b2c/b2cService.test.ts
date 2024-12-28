@@ -1,16 +1,19 @@
-import { B2cService } from "../../src/b2c/b2cService";
+import { B2c } from "../../src/b2c/b2cService";
 import { Auth } from "../../src/auth/authService";
+import { Mpesa } from "../../src/mpesa";
 
 describe("Bussiness to customer service test", () => {
-  it("Initiates payment successfully", async () => {
-    const auth = new Auth(
-      process.env.CONSUMER_KEY!,
-      process.env.CONSUMER_SECRET!
-    );
-    const token = await auth.getToken();
+  const config = {
+    consumerKey: process.env.CONSUMER_KEY!,
+    consumerSecret: process.env.CONSUMER_SECRET!,
+  };
+  const mpesa = new Mpesa(config);
 
-    const payment = new B2cService(token);
-    const response = await payment.stkPush({
+  it("Initiates payment successfully", async () => {
+    // Wait until b2cService is ready
+    await mpesa.initializeB2cService();
+
+    const response = await mpesa.b2cService?.stkPush({
       MerchantRequestID: "SFC-Testing-9146-4216-9455-e3947ac570fc",
       BusinessShortCode: "554433",
       Password: "123",
@@ -44,7 +47,8 @@ describe("Bussiness to customer service test", () => {
   });
 
   it("it should request payout service successfuly", async () => {
-    const payment = new B2cService("fake-token");
+    // Wait until b2cService is ready
+    await mpesa.initializeB2cService();
 
     const b2cRequest = {
       InitiatorName: "testapi",
@@ -60,7 +64,7 @@ describe("Bussiness to customer service test", () => {
       Occassion: "Disbursement",
     };
 
-    const response = await payment.payOut(b2cRequest);
+    const response = await mpesa.b2cService?.payOut(b2cRequest);
     expect(response).toHaveProperty("ConversationID");
     expect(response.ResponseCode).toBe("0");
   });
