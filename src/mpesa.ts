@@ -5,6 +5,7 @@ interface SDKConfig {
   clientId: string;
   clientSecret: string;
   apiKey?: string;
+  environment: "sandbox" | "production";
 }
 
 export class Mpesa {
@@ -16,6 +17,6 @@ export class Mpesa {
     }
     const authService = new Auth(config.clientId, config.clientSecret);
 
-    this.c2bService = new C2b(config.apiKey || "");
+    this.c2bService = new C2b(config.apiKey || "", config.environment);
   }
 }

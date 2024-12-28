@@ -2,15 +2,16 @@ import axios, { AxiosInstance } from "axios";
 import { RegisterUrl, PaymentRequest, PaymentResponse } from "./c2bTypes";
 import { RegisterUrlSchema, PaymentRequestSchema } from "./c2bSchema";
 import { validate } from "../utils/validate";
+import { ENDPOINTS, getBaseUrl } from "../utils/httpClient";
 
 export class C2b {
   private client: AxiosInstance;
   private apiKey: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, environment: "sandbox" | "production") {
     this.apiKey = apiKey; // Allow passing the API key dynamically.
     this.client = axios.create({
-      baseURL: "https://apisandbox.safaricom.et/v1/",
+      baseURL: getBaseUrl(environment),
     });
   }
 
@@ -18,7 +19,7 @@ export class C2b {
     validate(data, RegisterUrlSchema);
     try {
       const response = await this.client.post(
-        `c2b-register-url/register?apikey=${this.apiKey}`,
+        `${ENDPOINTS.c2b.registerUrl}?apikey=${this.apiKey}`,
         data
       );
       return response.data;
@@ -31,7 +32,7 @@ export class C2b {
     validate(data, PaymentRequestSchema);
     try {
       const response = await this.client.post(
-        `c2b/payments?apikey=${this.apiKey}`,
+        `${ENDPOINTS.c2b.makePayment}?apikey=${this.apiKey}`,
         data
       );
       return response.data;

@@ -1,6 +1,7 @@
 import { C2b } from "../../src/c2b/c2bService";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
+import { ENDPOINTS, getBaseUrl } from "../../src/utils/httpClient";
 
 describe("C2b Url Registration ", () => {
   let mock: MockAdapter;
@@ -14,7 +15,7 @@ describe("C2b Url Registration ", () => {
   });
 
   it("should register URL successfully", async () => {
-    const c2b = new C2b("testApiKey");
+    const c2b = new C2b("testApiKey", "sandbox");
 
     const mockResponse = {
       header: {
@@ -27,7 +28,7 @@ describe("C2b Url Registration ", () => {
 
     mock
       .onPost(
-        "https://apisandbox.safaricom.et/v1/c2b-register-url/register?apikey=testApiKey"
+        `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.registerUrl}?apikey=testApiKey`
       )
       .reply(200, mockResponse);
 
@@ -46,11 +47,11 @@ describe("C2b Url Registration ", () => {
   });
 
   // it("should throw an error when API call fails", async () => {
-  //   const c2b = new C2b("testApiKey");
+  //   const c2b = new C2b("testApiKey", "sandbox");
 
   //   mock
   //     .onPost(
-  //       "https://apisandbox.safaricom.et/v1/c2b-register-url/register?apikey=testApiKey"
+  //       `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.registerUrl}?apikey=testApiKey`
   //     )
   //     .reply(400, { error: "Short Code already Registered" });
 
@@ -78,7 +79,7 @@ describe("C2b Payments", () => {
   });
 
   it("should make a payment successfully", async () => {
-    const c2b = new C2b("testApiKey");
+    const c2b = new C2b("testApiKey", "sandbox");
 
     const mockResponse = {
       RequestRefID: "29900fe1-ac90-45ce-9443-19eec5f31234",
@@ -90,7 +91,7 @@ describe("C2b Payments", () => {
 
     mock
       .onPost(
-        "https://apisandbox.safaricom.et/v1/c2b/payments?apikey=testApiKey"
+        `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.makePayment}?apikey=testApiKey`
       )
       .reply(200, mockResponse);
 
@@ -132,11 +133,11 @@ describe("C2b Payments", () => {
   });
 
   // it("should throw an error when payment fails", async () => {
-  //   const c2b = new C2b("testApiKey");
+  //   const c2b = new C2b("testApiKey", "sandbox");
 
   //   mock
   //     .onPost(
-  //       "https://apisandbox.safaricom.et/v1/c2b/payments?apikey=testApiKey"
+  //       `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.makePayment}?apikey=testApiKey`
   //     )
   //     .reply(400, {
   //       RequestRefID: "17b0ca4b-e721-4e54-9e17-315d3f968c78",
