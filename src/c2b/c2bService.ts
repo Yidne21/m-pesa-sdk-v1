@@ -1,5 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { RegisterUrl, PaymentRequest, PaymentResponse } from "./c2bTypes";
+import { RegisterUrlSchema, PaymentRequestSchema } from "./c2bSchema";
+import { validate } from "../utils/validate";
 
 export class C2b {
   private client: AxiosInstance;
@@ -13,6 +15,7 @@ export class C2b {
   }
 
   async registerUrl(data: RegisterUrl): Promise<any> {
+    validate(data, RegisterUrlSchema);
     try {
       const response = await this.client.post(
         `c2b-register-url/register?apikey=${this.apiKey}`,
@@ -25,6 +28,7 @@ export class C2b {
   }
 
   async makePayment(data: PaymentRequest): Promise<PaymentResponse> {
+    validate(data, PaymentRequestSchema);
     try {
       const response = await this.client.post(
         `c2b/payments?apikey=${this.apiKey}`,
