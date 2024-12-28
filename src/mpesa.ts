@@ -6,6 +6,9 @@ interface SDKConfig {
   clientId?: string;
   clientSecret?: string;
   apiKey?: string;
+  environment: "sandbox" | "production";
+  retry?: boolean;
+  retryCount?: number;
   consumerKey?: string;
   consumerSecret: string;
 }
@@ -19,8 +22,13 @@ export class Mpesa {
     // if (!config.clientId || !config.clientSecret) {
     //   throw new Error("Both clientId and clientSecret are required.");
     // }
+    this.c2bService = new C2b(
+      config.apiKey || "",
+      config.environment,
+      config.retry,
+      config.retryCount
+    );
     this.authService = new Auth(config.consumerKey, config.consumerSecret);
-    this.c2bService = new C2b(config.apiKey || "");
     this.initializeB2cService();
   }
 
