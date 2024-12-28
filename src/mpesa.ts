@@ -6,6 +6,8 @@ interface SDKConfig {
   clientSecret: string;
   apiKey?: string;
   environment: "sandbox" | "production";
+  retry?: boolean;
+  retryCount?: number;
 }
 
 export class Mpesa {
@@ -17,6 +19,11 @@ export class Mpesa {
     }
     const authService = new Auth(config.clientId, config.clientSecret);
 
-    this.c2bService = new C2b(config.apiKey || "", config.environment);
+    this.c2bService = new C2b(
+      config.apiKey || "",
+      config.environment,
+      config.retry,
+      config.retryCount
+    );
   }
 }
