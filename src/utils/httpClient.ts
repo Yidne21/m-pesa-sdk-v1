@@ -10,11 +10,8 @@ export const ENDPOINTS = {
     makePayment: "/v1/c2b/payments",
   },
   b2c: {
-    initiatePayment: "/v1/b2c/payments",
-  },
-  stkPush: {
-    initiate: "/v1/stkpush/processrequest",
-    query: "/v1/stkpush/query",
+    stkPush: "/mpesa/stkpush/v3/processrequest",
+    payout: "/mpesa/b2c/v1/paymentrequest",
   },
 };
 

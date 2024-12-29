@@ -3,7 +3,7 @@ export interface Data {
   Value: string;
 }
 
-export interface PaymentRequest {
+export interface StkPushRequest {
   PhoneNumber: number;
   AccountReference: string;
   MerchantRequestID: string;
@@ -19,7 +19,15 @@ export interface PaymentRequest {
   Timestamp?: string;
 }
 
-export interface B2CRequest {
+export interface StkPushResponse {
+  MerchantRequestID: string;
+  CheckoutRequestID: string;
+  ResponseCode: string;
+  ResponseDescription: string;
+  CustomerMessage: string;
+}
+
+export interface PayOutRequest {
   InitiatorName: string;
   SecurityCredential: string;
   CommandID: string;
@@ -30,4 +38,11 @@ export interface B2CRequest {
   QueueTimeOutURL: string;
   ResultURL: string;
   Occassion?: string;
+}
+
+export interface PayOutResponse {
+  ConversationID: string;
+  OriginatorConversationID: string;
+  ResponseCode: string;
+  ResponseDescription: string;
 }

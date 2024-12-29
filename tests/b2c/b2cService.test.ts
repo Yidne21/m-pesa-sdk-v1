@@ -1,9 +1,8 @@
-import { B2c } from "../../src/b2c/b2cService";
-import { Auth } from "../../src/auth/authService";
 import { Mpesa } from "../../src/mpesa";
 
 describe("Bussiness to customer service test", () => {
   const config = {
+    environment: "sandbox" as "sandbox",
     consumerKey: process.env.CONSUMER_KEY!,
     consumerSecret: process.env.CONSUMER_SECRET!,
   };
@@ -66,6 +65,8 @@ describe("Bussiness to customer service test", () => {
 
     const response = await mpesa.b2cService?.payOut(b2cRequest);
     expect(response).toHaveProperty("ConversationID");
-    expect(response.ResponseCode).toBe("0");
+    if (response) {
+      expect(response.ResponseCode).toBe("0");
+    }
   });
 });
