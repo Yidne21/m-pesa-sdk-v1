@@ -7,7 +7,8 @@ export interface StkPushRequest {
   PhoneNumber: number;
   AccountReference: string;
   MerchantRequestID: string;
-  BusinessShortCode: string;
+  BusinessShortCode: number;
+  PassKey: string;
   TransactionType: string;
   Amount: number;
   PartyA: number;
@@ -29,15 +30,16 @@ export interface StkPushResponse {
 
 export interface PayOutRequest {
   InitiatorName: string;
-  SecurityCredential: string;
+  InitiatorPwd: string;
   CommandID: string;
   Amount: number;
-  PartyA: string;
-  PartyB: string;
+  PartyA: number;
+  PartyB: number;
   Remarks: string;
   QueueTimeOutURL: string;
   ResultURL: string;
   Occassion?: string;
+  SecurityCredential?: string;
 }
 
 export interface PayOutResponse {

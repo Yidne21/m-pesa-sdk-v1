@@ -2,8 +2,13 @@ import { z } from "zod";
 
 export const PayOutRequstSchema = z.object({
   InitiatorName: z.string().min(1, { message: "InitiatorName is required" }),
-  InitiatorPwd: z.string(),
-  CommandID: z.string(),
+  InitiatorPwd: z.string().min(1, { message: "InitiatorPwd is required" }),
+  CommandID: z.enum(["SalaryPayment", "BusinessPayment", "PromotionPayment"], {
+    errorMap: () => ({
+      message:
+        "Invalid CommandID. Must be 'SalaryPayment', 'BusinessPayment' or 'PromotionPayment'.",
+    }),
+  }),
   Amount: z.number().positive({ message: "Amount must be a positive value" }),
   PartyA: z
     .number()
@@ -15,7 +20,7 @@ export const PayOutRequstSchema = z.object({
   PartyB: z
     .number()
     .positive()
-    .refine((val) => /^2547\d{8}$/.test(val.toString()), {
+    .refine((val) => /^2547|2517\d{8}$/.test(val.toString()), {
       message:
         "Invalid phone number format. It should be 12 digits starting with 2547",
     }),
@@ -39,6 +44,7 @@ export const PayOutRequstSchema = z.object({
 });
 
 export const StkPushRequestSchema = z.object({
+  MerchantRequestID: z.string({ message: "MerchantRequestID is required" }),
   BusinessShortCode: z
     .number()
     .positive()
@@ -46,6 +52,7 @@ export const StkPushRequestSchema = z.object({
     .refine((val) => val >= 10000 && val <= 999999, {
       message: "Invalid Business Short Code format. It should be 5 to 6 digits",
     }),
+  PassKey: z.string({ message: "PassKey is required" }),
   TransactionType: z.enum(["CustomerPayBillOnline", "CustomerBuyGoodsOnline"], {
     errorMap: () => ({
       message:
@@ -58,9 +65,9 @@ export const StkPushRequestSchema = z.object({
   PartyA: z
     .number()
     .positive()
-    .refine((val) => /^2547\d{8}$/.test(val.toString()), {
+    .refine((val) => /^(2547|2517)\d{8}$/.test(val.toString()), {
       message:
-        "Invalid phone number format. It should be 12 digits starting with 2547",
+        "Invalid phone number format. It should be 12 digits starting with 2547 or 2517",
     }),
   PartyB: z
     .number()
@@ -72,9 +79,9 @@ export const StkPushRequestSchema = z.object({
   PhoneNumber: z
     .number()
     .positive()
-    .refine((val) => /^2547\d{8}$/.test(val.toString()), {
+    .refine((val) => /^(2547|2517)\d{8}$/.test(val.toString()), {
       message:
-        "Invalid phone number format. It should be 12 digits starting with 2547",
+        "Invalid phone number format. It should be 12 digits starting with 2547 or 2517",
     }),
   CallBackURL: z.string().url({
     message: "Invalid CallBackURL format. ex, https://mydomain.com/path",
@@ -85,10 +92,14 @@ export const StkPushRequestSchema = z.object({
     .regex(/^[a-zA-Z0-9]*$/, {
       message:
         "Account Reference must be alphanumeric (letters and numbers only).",
-    })
-    .optional(),
+    }),
   TransactionDesc: z
     .string()
-    .max(12, { message: "Transaction desc cannot exceed 13 characters." })
-    .optional(),
+    .max(12, { message: "Transaction desc cannot exceed 13 characters." }),
+  ReferenceData: z.array(
+    z.object({
+      Key: z.string(),
+      Value: z.string(),
+    })
+  ),
 });
