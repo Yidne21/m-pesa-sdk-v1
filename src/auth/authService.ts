@@ -2,7 +2,6 @@ import axios from "axios";
 import { errorHandler } from "../utils/errorHandler";
 import { ENDPOINTS, getBaseUrl } from "../utils/httpClient";
 import { backOff } from "exponential-backoff";
-import { validate } from "../utils/validate";
 
 export class Auth {
   private consumerKey: string;

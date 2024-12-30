@@ -2,6 +2,8 @@ import { Auth } from "./auth/authService";
 import { C2b } from "./c2b/c2bService";
 import { B2c } from "./b2c/b2cService";
 import { errorHandler } from "./utils/errorHandler";
+import { validate } from "./utils/validate";
+import { authConfigSchema } from "./auth/authConfigSchema";
 
 interface SDKConfig {
   clientId?: string;
@@ -31,6 +33,7 @@ export class Mpesa {
   }
 
   public async initializeB2cService() {
+    validate(this.config, authConfigSchema);
     try {
       this.authService = new Auth(
         this.config.consumerKey,
