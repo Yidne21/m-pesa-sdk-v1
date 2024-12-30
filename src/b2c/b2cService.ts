@@ -46,10 +46,16 @@ export class B2c {
         ? await backOff(request, { numOfAttempts: this.retryCount })
         : await request();
       if (response.data.ResponseCode !== "0") {
-        throw new UnauthorizedError(
-          response.data.CustomerMessage,
-          response.data
-        );
+        const { ResponseCode, CustomerMessage } = response.data;
+
+        console.log("ResponseCode", response.data);
+
+        if (ResponseCode === "SVC0403") {
+          throw new UnauthorizedError(
+            response.data.CustomerMessage,
+            response.data
+          );
+        }
       }
       this.log.info("stkPush request processed successfully");
 
