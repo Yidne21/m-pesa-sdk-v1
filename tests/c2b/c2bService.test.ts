@@ -1,7 +1,8 @@
-import { C2b } from "../../src/c2b/c2bService";
+import { Mpesa } from "../../src/mpesa";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { ENDPOINTS, getBaseUrl } from "../../src/utils/httpClient";
+import { logger } from "../../src/utils/logger";
 
 describe("C2b Url Registration ", () => {
   let mock: MockAdapter;
@@ -14,8 +15,17 @@ describe("C2b Url Registration ", () => {
     mock.restore(); // Restore axios to its original state after each test
   });
 
-  it("should register URL successfully", async () => {
-    const c2b = new C2b("testApiKey", "sandbox");
+  it("should register URL successfully with retry", async () => {
+    const mpesa = new Mpesa({
+      clientId: "testClientId",
+      clientSecret: "testClientSecret",
+      apiKey: "testApiKey",
+      environment: "sandbox",
+      retry: true,
+      retryCount: 2,
+    });
+
+    const c2b = mpesa.c2bService;
 
     const mockResponse = {
       header: {
@@ -78,8 +88,17 @@ describe("C2b Payments", () => {
     mock.restore(); // Restore axios to its original state after each test
   });
 
-  it("should make a payment successfully", async () => {
-    const c2b = new C2b("testApiKey", "sandbox");
+  it("should make a payment successfully with retry", async () => {
+    const mpesa = new Mpesa({
+      clientId: "testClientId",
+      clientSecret: "testClientSecret",
+      apiKey: "testApiKey",
+      environment: "sandbox",
+      retry: true,
+      retryCount: 2,
+    });
+
+    const c2b = mpesa.c2bService;
 
     const mockResponse = {
       RequestRefID: "29900fe1-ac90-45ce-9443-19eec5f31234",
