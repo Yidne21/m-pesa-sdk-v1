@@ -8,18 +8,18 @@ describe("C2b Url Registration ", () => {
   let mock: MockAdapter;
 
   beforeEach(() => {
-    mock = new MockAdapter(axios);
+    // mock = new MockAdapter(axios);
   });
 
   afterEach(() => {
-    mock.restore(); // Restore axios to its original state after each test
+    //mock.restore(); // Restore axios to its original state after each test
   });
 
   it("should register URL successfully with retry", async () => {
     const mpesa = new Mpesa({
-      clientId: "testClientId",
-      clientSecret: "testClientSecret",
-      apiKey: "testApiKey",
+      consumerKey: process.env.CONSUMER_KEY!,
+      consumerSecret: process.env.CONSUMER_SECRET!,
+      apiKey: "L4Y36QBxcBTOKEuJLXvCPJxA8sKV4frvYB2mOwbG2vdjalAX",
       environment: "sandbox",
       retry: true,
       retryCount: 2,
@@ -36,56 +36,68 @@ describe("C2b Url Registration ", () => {
       },
     };
 
-    mock
-      .onPost(
-        `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.registerUrl}?apikey=testApiKey`
-      )
-      .reply(200, mockResponse);
+    // mock
+    //   .onPost(
+    //     `${getBaseUrl("sandbox")}${
+    //       ENDPOINTS.c2b.registerUrl
+    //     }?apikey=testApiKey2`
+    //   )
+    //   .reply(200, mockResponse);
 
     const response = await c2b.registerUrl({
-      ShortCode: 101010,
+      ShortCode: "802000",
       ResponseType: "Completed",
       CommandID: "RegisterURL",
-      ConfirmationURL: "https://mydomain.com/c2b/confirmation",
-      ValidationURL: "https://mydomai.com/c2b/validation",
+      ConfirmationURL: "https://www.myservice:8080/confirmation",
+      ValidationURL: "https://www.myservice:8080/validation",
     });
 
-    expect(response).toHaveProperty("header");
     expect(response.header.responseMessage).toBe(
       "Request processed successfully"
     );
   });
 
-  // it("should throw an error when API call fails", async () => {
-  //   const c2b = new C2b("testApiKey", "sandbox");
+  it("should throw an error when API call fails", async () => {
+    const mpesa = new Mpesa({
+      consumerKey: process.env.CONSUMER_KEY!,
+      consumerSecret: process.env.CONSUMER_SECRET!,
+      apiKey: "L4Y36QBxcBTOKEuJLXvCPJxA8sKV4frvYB2mOwbG2vdjalAX",
+      environment: "sandbox",
+      retry: true,
+      retryCount: 2,
+    });
 
-  //   mock
-  //     .onPost(
-  //       `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.registerUrl}?apikey=testApiKey`
-  //     )
-  //     .reply(400, { error: "Short Code already Registered" });
+    const c2b = mpesa.c2bService;
 
-  //   await expect(
-  //     c2b.registerUrl({
-  //       ShortCode: 101010,
-  //       ResponseType: "Completed",
-  //       CommandID: "RegisterURL",
-  //       ConfirmationURL: "https://mydomain.com/c2b/confirmation",
-  //       ValidationURL: "https://mydomai.com/c2b/validation",
-  //     })
-  //   ).rejects.toThrow("Request failed");
-  // });
+    // mock
+    //   .onPost(
+    //     `${getBaseUrl("sandbox")}${
+    //       ENDPOINTS.c2b.registerUrl
+    //     }?apikey=testApiKey2`
+    //   )
+    //   .reply(400, { error: "Short Code already Registered" });
+
+    await expect(
+      c2b.registerUrl({
+        ShortCode: "802000",
+        ResponseType: "Completed",
+        CommandID: "RegisterURL",
+        ConfirmationURL: "https://www.myservice:8080/confirmation",
+        ValidationURL: "https://www.myservice:8080/validation",
+      })
+    ).rejects.toThrow("Request failed with status code 400");
+  });
 });
 
 describe("C2b Payments", () => {
   let mock: MockAdapter;
 
   beforeEach(() => {
-    mock = new MockAdapter(axios); // Set up a new mock adapter before each test
+    // mock = new MockAdapter(axios); // Set up a new mock adapter before each test
   });
 
   afterEach(() => {
-    mock.restore(); // Restore axios to its original state after each test
+    // mock.restore(); // Restore axios to its original state after each test
   });
 
   it("should make a payment successfully with retry", async () => {
@@ -108,11 +120,9 @@ describe("C2b Payments", () => {
       AdditionalInfo: [],
     };
 
-    mock
-      .onPost(
-        `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.makePayment}?apikey=testApiKey`
-      )
-      .reply(200, mockResponse);
+    // mock
+    //   .onPost(`${getBaseUrl("sandbox")}${ENDPOINTS.c2b.makePayment}`)
+    //   .reply(200, mockResponse);
 
     const response = await c2b.makePayment({
       RequestRefID: "12345",
@@ -151,51 +161,58 @@ describe("C2b Payments", () => {
     );
   });
 
-  // it("should throw an error when payment fails", async () => {
-  //   const c2b = new C2b("testApiKey", "sandbox");
+  it("should throw an error when payment fails", async () => {
+    const mpesa = new Mpesa({
+      clientId: "testClientId",
+      clientSecret: "testClientSecret",
+      apiKey: "testApiKey",
+      environment: "sandbox",
+      retry: true,
+      retryCount: 2,
+    });
 
-  //   mock
-  //     .onPost(
-  //       `${getBaseUrl("sandbox")}${ENDPOINTS.c2b.makePayment}?apikey=testApiKey`
-  //     )
-  //     .reply(400, {
-  //       RequestRefID: "17b0ca4b-e721-4e54-9e17-315d3f968c78",
-  //       ResponseCode: "2001",
-  //       ResponseDesc: "The initiator information is invalid.",
-  //       TransactionID: null,
-  //       AdditionalInfo: [],
-  //     });
+    const c2b = mpesa.c2bService;
 
-  //   await expect(
-  //     c2b.makePayment({
-  //       RequestRefID: "12345",
-  //       CommandID: "CustomerPayBillOnline",
-  //       Remark: "Here is a remark",
-  //       ChannelSessionID: "10100000037656400042",
-  //       SourceSystem: "USSD",
-  //       Timestamp: "2014-09-30T11:03:19.111+03:00",
-  //       Parameters: [
-  //         { Key: "Amount", Value: "500" },
-  //         { Key: "AccountReference", Value: "TU781RE" },
-  //         { Key: "Currency", Value: "ETB" },
-  //       ],
-  //       ReferenceData: [{ Key: "AppVersion", Value: "v0.2" }],
-  //       Initiator: {
-  //         IdentifierType: 1,
-  //         Identifier: "251799100026",
-  //         SecurityCredential: "testSecurityCredential",
-  //         SecretKey: "testSecretKey",
-  //       },
-  //       PrimaryParty: {
-  //         IdentifierType: 1,
-  //         Identifier: "251799100026",
-  //       },
-  //       ReceiverParty: {
-  //         IdentifierType: 4,
-  //         Identifier: "370360",
-  //         ShortCode: "370360",
-  //       },
-  //     })
-  //   ).rejects.toThrow("Payment request failed");
-  // });
+    // mock
+    //   .onPost(`${getBaseUrl("sandbox")}${ENDPOINTS.c2b.makePayment}`)
+    //   .reply(400, {
+    //     RequestRefID: "17b0ca4b-e721-4e54-9e17-315d3f968c78",
+    //     ResponseCode: "2001",
+    //     ResponseDesc: "The initiator information is invalid.",
+    //     TransactionID: null,
+    //     AdditionalInfo: [],
+    //   });
+
+    await expect(
+      c2b.makePayment({
+        RequestRefID: "12345",
+        CommandID: "CustomerPayBillOnline",
+        Remark: "Here is a remark",
+        ChannelSessionID: "10100000037656400042",
+        SourceSystem: "USSD",
+        Timestamp: "2014-09-30T11:03:19.111+03:00",
+        Parameters: [
+          { Key: "Amount", Value: "500" },
+          { Key: "AccountReference", Value: "TU781RE" },
+          { Key: "Currency", Value: "ETB" },
+        ],
+        ReferenceData: [{ Key: "AppVersion", Value: "v0.2" }],
+        Initiator: {
+          IdentifierType: 1,
+          Identifier: "251799100026",
+          SecurityCredential: "testSecurityCredential",
+          SecretKey: "testSecretKey",
+        },
+        PrimaryParty: {
+          IdentifierType: 1,
+          Identifier: "251799100026",
+        },
+        ReceiverParty: {
+          IdentifierType: 4,
+          Identifier: "370360",
+          ShortCode: "370360",
+        },
+      })
+    ).rejects.toThrow("Request failed with status code 404");
+  });
 });

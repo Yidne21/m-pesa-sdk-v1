@@ -50,6 +50,8 @@ export class Mpesa {
         this.config.retryCount
       );
     } catch (error) {
+      console.log(error);
+
       errorHandler(error, { module: "Mpesa Service" });
     }
   }

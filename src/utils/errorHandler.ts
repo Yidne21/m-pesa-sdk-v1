@@ -12,7 +12,7 @@ import {
 export const errorHandler = (err: any, context: any) => {
   if (err instanceof AxiosError && err.response) {
     const { status, data } = err.response;
-    const message = data.errorMessage || err.message;
+    const message = data?.errorMessage || err.message;
 
     switch (status) {
       case 400:

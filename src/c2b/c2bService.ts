@@ -5,6 +5,7 @@ import { validate } from "../utils/validate";
 import { ENDPOINTS, getBaseUrl } from "../utils/httpClient";
 import { logger } from "../utils/logger";
 import { backOff } from "exponential-backoff";
+import { errorHandler } from "../utils/errorHandler";
 
 export class C2b {
   private client: AxiosInstance;
@@ -30,8 +31,14 @@ export class C2b {
 
   async registerUrl(data: RegisterUrl): Promise<any> {
     validate(data, RegisterUrlSchema);
-    this.log.info("Registering URL", { data });
+    this.log.info("Registering URL \n", { data });
     try {
+      console.log(
+        `${this.client.defaults.baseURL + ENDPOINTS.c2b.registerUrl}?apikey=${
+          this.apiKey
+        }`
+      );
+
       const request = () =>
         this.client.post(
           `${ENDPOINTS.c2b.registerUrl}?apikey=${this.apiKey}`,
@@ -41,12 +48,17 @@ export class C2b {
         ? await backOff(request, { numOfAttempts: this.retryCount })
         : await request();
       this.log.info("URL registered successfully", { response: response.data });
+
+      if (response.data.ResponseCode === 400) {
+        throw new Error("Short Code already Registered");
+      }
       return response.data;
     } catch (error: any) {
       this.log.error("Error registering URL", {
         error: error.response?.data || error.message,
       });
-      throw new Error(error.response?.data || "Request failed");
+
+      errorHandler(error, { module: "C2B Payment" });
     }
   }
 
@@ -55,20 +67,22 @@ export class C2b {
     this.log.info("Making payment", { data });
     try {
       const request = () =>
-        this.client.post(
-          `${ENDPOINTS.c2b.makePayment}?apikey=${this.apiKey}`,
-          data
-        );
+        this.client.post(`${ENDPOINTS.c2b.makePayment}`, data);
       const response = this.retry
         ? await backOff(request, { numOfAttempts: this.retryCount })
         : await request();
+
+      if (response.data.ResponseCode == "2001") {
+        throw new Error("The initiator information is invalid.");
+      }
+
       this.log.info("Payment made successfully", { response: response.data });
       return response.data;
     } catch (error: any) {
       this.log.error("Error making payment", {
         error: error.response?.data || error.message,
       });
-      throw new Error(error.response?.data || "Payment request failed");
+      errorHandler(error, { module: "C2B Payment" });
     }
   }
 }

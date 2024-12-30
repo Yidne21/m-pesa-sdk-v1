@@ -4,7 +4,7 @@ export interface Data {
 }
 
 export type RegisterUrl = {
-  ShortCode: number;
+  ShortCode: string;
   ResponseType: string;
   CommandID: string;
   ConfirmationURL: string;
