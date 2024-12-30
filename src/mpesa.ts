@@ -28,12 +28,17 @@ export class Mpesa {
       config.retry,
       config.retryCount
     );
-    this.authService = new Auth(config.consumerKey, config.consumerSecret);
-    this.initializeB2cService();
   }
 
   public async initializeB2cService() {
     try {
+      this.authService = new Auth(
+        this.config.consumerKey,
+        this.config.consumerSecret,
+        this.config.environment,
+        this.config.retry,
+        this.config.retryCount
+      );
       const token = await this.authService.getToken();
       this.b2cService = new B2c(
         token,

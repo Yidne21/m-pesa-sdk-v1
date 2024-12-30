@@ -1,34 +1,51 @@
 import axios from "axios";
+import { errorHandler } from "../utils/errorHandler";
+import { ENDPOINTS, getBaseUrl } from "../utils/httpClient";
+import { backOff } from "exponential-backoff";
+import { validate } from "../utils/validate";
 
 export class Auth {
   private consumerKey: string;
   private consumerSecret: string;
   private token: string | null;
+  private retry: boolean;
+  private retryCount: number;
+  private env: "sandbox" | "production";
 
-  constructor(consumerKey: string, consumerSecret: string) {
+  constructor(
+    consumerKey: string,
+    consumerSecret: string,
+    environment: "sandbox" | "production",
+    retry: boolean = true,
+    retryCount: number = 2
+  ) {
     this.consumerKey = consumerKey;
     this.consumerSecret = consumerSecret;
     this.token = null;
-
-    console.log("+++++++++CK++++++++++:", this.consumerKey);
-    console.log("+++++++++CS++++++++++:", this.consumerSecret);
+    this.env = environment;
+    this.retry = retry;
+    this.retryCount = retryCount;
   }
 
   async getToken(): Promise<string> {
-    const auth = Buffer.from(
-      `${this.consumerKey}:${this.consumerSecret}`
-    ).toString("base64");
-    const response = await axios.get(
-      "https://apisandbox.safaricom.et/v1/token/generate?grant_type=client_credentials",
-      {
-        headers: {
-          Authorization: `Basic ${auth}`,
-        },
-      }
-    );
+    try {
+      const auth = Buffer.from(
+        `${this.consumerKey}:${this.consumerSecret}`
+      ).toString("base64");
 
-    console.log("+++++++++Token++++++++++:", response.data);
-    this.token = response.data.access_token;
-    return this.token;
+      const request = () =>
+        axios.get(`${getBaseUrl(this.env)}/${ENDPOINTS.auth}`, {
+          headers: {
+            Authorization: `Basic ${auth}`,
+          },
+        });
+      const response = this.retry
+        ? await backOff(request, { numOfAttempts: this.retryCount })
+        : await request();
+      this.token = response.data.access_token;
+      return this.token;
+    } catch (err) {
+      errorHandler(err, { module: "auth" });
+    }
   }
 }

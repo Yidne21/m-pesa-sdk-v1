@@ -4,7 +4,7 @@ const BASE_URLS = {
 };
 
 export const ENDPOINTS = {
-  authentication: "/oauth/v1/generate",
+  auth: "/v1/token/generate?grant_type=client_credentials",
   c2b: {
     registerUrl: "/v1/c2b-register-url/register",
     makePayment: "/v1/c2b/payments",
