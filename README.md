@@ -89,7 +89,7 @@ if (!isValid) {
 ```
 
 ## Contributing
-We welcome contributions to the MPESA SDK. If you would like to contribute, please follow these guidelines:
+We welcome contributions to the MPESA SDK from authorized team members. To ensure a smooth collaboration process, please follow these guidelines:
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature-branch`).
