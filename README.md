@@ -175,11 +175,6 @@ try {
 
 ---
 
-```
-
----
-
 ## License
-MIT License.
 
-```
+MIT License.
