@@ -63,8 +63,6 @@ describe("Bussiness to customer service test", () => {
 
     const response = await mpesa.b2cService?.payOut(b2cRequest);
     expect(response).toHaveProperty("ConversationID");
-    if (response) {
-      expect(response.ResponseCode).toBe("0");
-    }
+    expect(response?.ResponseCode).toBe("0");
   });
 });
