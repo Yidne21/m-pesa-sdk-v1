@@ -1,6 +1,7 @@
 {
   "name": "mpesa-sdk-v1",
   "version": "0.0.3",
+  "description": "A SDK for M-PESA integration",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
   "types": "dist/index.d.ts",
@@ -8,6 +9,31 @@
   "scripts": {
     "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap",
     "test": "jest"
+  },
+  "keywords": [
+    "mpesa",
+    "sdk",
+    "payment",
+    "integration",
+    "typescript"
+  ],
+  "authors": [
+    {
+      "name": "Yidnekachew Bantrga",
+      "email": "yidnebantrga@gmail.com"
+    },
+    {
+      "name": "Bereket Tadele",
+      "email": "bereket2023wku@gmail.com"
+    },
+    {
+      "name": "Abel Zeleke",
+      "email": "abelzeleke5173@gmail.com"
+    }
+  ],
+  "homepage": "https://github.com/Yidne21/m-pesa-sdk-v1#readme",
+  "bugs": {
+    "url": "https://github.com/Yidne21/m-pesa-sdk-v1/issues"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
