@@ -7,7 +7,7 @@ This package provides a Node.js client for interacting with Mpesa's API services
 ## Installation
 
 ```bash
-npm install mpesa-node-sdk
+npm install mpesa-sdk-v1
 ```
 
 ## Configuration
@@ -24,7 +24,7 @@ To initialize the Mpesa client, you need to provide the following configuration 
 Example:
 
 ```javascript
-const { Mpesa } = require("mpesa-node-client");
+const { Mpesa } = require("mpesa-sdk-v1");
 
 const mpesa = new Mpesa({
   consumerKey: process.env.CONSUMER_KEY,

@@ -1,5 +1,5 @@
 {
-  "name": "mpesa-sdk",
+  "name": "mpesa-sdk-v1",
   "version": "0.0.1",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
@@ -31,5 +31,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }
