@@ -1,4 +1,4 @@
-import { Mpesa } from "../../src/mpesa";
+import { Mpesa } from "../../index";
 
 describe("Bussiness to customer service test", () => {
   const config = {

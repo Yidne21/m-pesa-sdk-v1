@@ -1,4 +1,4 @@
-import { Mpesa } from "../../src/mpesa";
+import { Mpesa } from "../../index";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { ENDPOINTS, getBaseUrl } from "../../src/utils/httpClient";
