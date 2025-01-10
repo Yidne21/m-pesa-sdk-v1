@@ -1,6 +1,6 @@
 {
   "name": "mpesa-sdk-v1",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A SDK for M-PESA integration",
   "main": "dist/index.js",
   "module": "dist/index.m.js",
